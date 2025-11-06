@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trust-agents"
+version = "0.1.0"
+description = "Week 1 baselines for LIAR: BERT, RoBERTa, GPT-4.1-nano"
+requires-python = ">=3.10"
+dependencies = [
+  "pandas>=2.2.2",
+  "numpy>=1.26.4",
+  "tqdm>=4.66.2",
+  "scikit-learn>=1.4.2",
+  "datasets>=2.20.0",
+  "tenacity>=8.2.3",
+  "openai>=1.40.0",
+  # HF baselines
+  "transformers>=4.44.0",
+  "accelerate>=0.34.0",
+  "evaluate>=0.4.2",
+  "torch>=2.3.1; platform_system!='Darwin' or platform_machine!='arm64'"
+]
