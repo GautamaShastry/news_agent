@@ -15,9 +15,24 @@ dependencies = [
   "datasets>=2.20.0",
   "tenacity>=8.2.3",
   "openai>=1.40.0",
+  "pyyaml>=6.0",
   # HF baselines
   "transformers>=4.44.0",
   "accelerate>=0.34.0",
   "evaluate>=0.4.2",
-  "torch>=2.3.1; platform_system!='Darwin' or platform_machine!='arm64'"
+  "torch>=2.3.1; platform_system!='Darwin' or platform_machine!='arm64'",
+  # Claim extractor (NLP + LLM)
+  "spacy>=3.7.0",
+  "python-dotenv>=1.0.0"
 ]
+
+[project.scripts]
+claim_extractor = "claim_extractor.main:run"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["claim_extractor*"]
+
+# Note: uv automatically reads .python-version file to determine Python version
+# No need to specify it in pyproject.toml - the .python-version file is sufficient
+

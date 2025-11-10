@@ -45,7 +45,7 @@ if __name__=="__main__":
     ap.add_argument("--dataset", choices=["liar","fnn"], required=True)
     ap.add_argument("--proc_dir", default="data/processed")
     ap.add_argument("--limit", type=int, default=200)
-    ap.add_argument("--model", default=os.getenv("TRUST_MODEL","gpt-4o-mini"))
+    ap.add_argument("--model", default=os.getenv("MODEL","gpt-4.1-mini"))
     ap.add_argument("--out", default=None)
     a=ap.parse_args()
 
