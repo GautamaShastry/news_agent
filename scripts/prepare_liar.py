@@ -1,6 +1,7 @@
 # scripts/prepare_liar.py
 from pathlib import Path
 import json, re
+from typing import Optional
 import pandas as pd
 
 RAW  = Path("data/raw/liar")
@@ -82,7 +83,7 @@ def read_wide_tsv(path: Path) -> pd.DataFrame:
         f"First line: {first_line[:200]}"
     )
 
-def map_label(lbl: str) -> str | None:
+def map_label(lbl: str) -> Optional[str]:
     if not isinstance(lbl, str): 
         return None
     l = lbl.strip().lower()
