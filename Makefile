@@ -1,7 +1,13 @@
-.PHONY: setup data.liar hf.bert hf.roberta eval.bert eval.roberta llm.run llm.eval compare
+.PHONY: setup data.liar hf.bert hf.roberta eval.bert eval.roberta llm.run llm.eval compare api.dev api.run
 
 setup:
 	python -m pip install -e .
+
+api.dev:
+	uv run fastapi dev app.py
+
+api.run:
+	uv run fastapi run app.py
 
 data.liar:
 	python scripts/download_liar.py && python scripts/prepare_liar.py
