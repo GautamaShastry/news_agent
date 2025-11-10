@@ -1,6 +1,6 @@
 """
 Baseline claim extractor - runs claim extraction on dataset and saves predictions.
-Uses hybrid approach combining NLP techniques:
+Uses ReAct Agent with NLP techniques:
 - Named Entity Recognition (NER)
 - Dependency Parsing  
 - Zero-shot reasoning (LLM)
@@ -11,21 +11,39 @@ Follows the same pattern as baseline_llm.py
 import argparse
 import json
 import os
+import logging
 from pathlib import Path
 from tenacity import retry, wait_exponential, stop_after_attempt
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from claim_extractor.extractor import ClaimExtractor
+# Configure logging ONCE at entry point (force=True overrides any prior configs)
+os.environ["PYTHONUNBUFFERED"] = "1"  # flush stdout/stderr immediately
 
-# Initialize extractor once (reused for all extractions)
-extractor = ClaimExtractor(use_ner=True, use_dependency=True, use_llm=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    force=True  # override any prior configs from imports
+)
+
+# Suppress noisy third-party logs
+for noisy in ["httpcore", "httpx", "openai", "langchain", "langgraph", "asyncio"]:
+    logging.getLogger(noisy).setLevel(logging.WARNING)
+
+# Import agent AFTER logging is configured
+from TRUST_agents.agents.claim_extractor import run_claim_extractor_agent_sync
 
 @retry(wait=wait_exponential(multiplier=1, min=1, max=8), stop=stop_after_attempt(5))
 def extract_claims(text: str) -> list:
     """
-    Extract claims from text using hybrid NLP techniques.
+    Extract claims from text using ReAct Agent with NLP techniques.
+    
+    The agent uses:
+    - Named Entity Recognition (NER)
+    - Dependency Parsing
+    - Zero-shot reasoning (LLM)
     
     Args:
         text: Input text to extract claims from
@@ -34,7 +52,7 @@ def extract_claims(text: str) -> list:
         List of extracted claim texts
     """
     try:
-        claims = extractor.extract(text)
+        claims = run_claim_extractor_agent_sync(text)
         return claims if claims else []
     except Exception as e:
         print(f"Error extracting claims: {e}")
@@ -42,7 +60,7 @@ def extract_claims(text: str) -> list:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(
-        description="Run claim extraction baseline using hybrid NLP techniques (NER + dependency parsing + zero-shot reasoning)"
+        description="Run claim extraction baseline using ReAct Agent with NLP techniques (NER + dependency parsing + zero-shot reasoning)"
     )
     ap.add_argument("--dataset", choices=["liar", "fnn"], required=True)
     ap.add_argument("--proc_dir", default="data/processed")

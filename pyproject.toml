@@ -23,15 +23,20 @@ dependencies = [
   "torch>=2.3.1; platform_system!='Darwin' or platform_machine!='arm64'",
   # Claim extractor (NLP + LLM)
   "spacy>=3.7.0",
-  "python-dotenv>=1.0.0"
+  "python-dotenv>=1.0.0",
+  # LangGraph and LangChain for ReAct agents
+  "langgraph>=0.2.0",
+  "langchain>=0.3.0",
+  "langchain-openai>=0.1.0",
+  "langchain-core>=0.3.0"
 ]
 
 [project.scripts]
-claim_extractor = "claim_extractor.main:run"
+trust_agents = "TRUST_agents.main:run"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["claim_extractor*"]
+include = ["TRUST_agents*"]
 
 # Note: uv automatically reads .python-version file to determine Python version
 # No need to specify it in pyproject.toml - the .python-version file is sufficient
