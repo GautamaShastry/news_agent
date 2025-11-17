@@ -37,7 +37,7 @@ async def ner_claim_extraction_tool(text: str) -> str:
     Returns:
         JSON string with claims list and method
     """
-   logger.info(f"[DEBUG] ner_claim_extraction_tool called")
+    logger.info(f"[DEBUG] ner_claim_extraction_tool called")
     
     try:
         nlp = spacy.load("en_core_web_sm")
@@ -163,7 +163,7 @@ No markdown, no additional text."""
                 {"role": "user", "content": prompt}
             ],
             temperature=0.1,
-            max_tokens=500
+            max_completion_tokens=500
         )
         
         content = response.choices[0].message.content.strip()
