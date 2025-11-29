@@ -31,7 +31,7 @@ llm.eval:
 compare:
 	python scripts/compare_metrics.py --dataset liar --out results/baselines_liar.json
 
-# Claim extraction baseline (follows same pattern as llm baseline)
+# Claim extraction baseline
 claim.run:
 	python scripts/baseline_claim_extractor.py --dataset liar --limit 200
 
@@ -58,11 +58,11 @@ trust.run:
 	python scripts/run_trust_agents.py --dataset liar --split val --limit 200 --top-k 5
 
 trust.run.full:
-	@echo "Running TRUST Agents on FULL validation set (this will take a while)..."
+	@echo "Running TRUST Agents on FULL validation set..."
 	python scripts/run_trust_agents.py --dataset liar --split val --top-k 5
 
 trust.eval:
-	python scripts/eval_trust_agents.py --preds outputs/trust_agents/liar_predictions.jsonl --dataset liar --split val --output outputs/trust_agents/metrics_liar.json
+	python scripts/evaluate_predictions.py --preds outputs/trust_agents/liar_predictions.jsonl --output outputs/trust_agents/metrics_liar.json
 
 trust.pipeline:
 	@echo "Running complete TRUST agents pipeline..."
@@ -83,15 +83,64 @@ clean.index:
 clean.all:
 	rm -rf outputs/ retrieval_index/ data/evidence_corpus/
 
+# ============================================================
+# TRUST AGENTS 2.0: RESEARCH PIPELINE (LoCal + Delphi)
+# ============================================================
+
+research.test:
+	@echo "Testing TRUST 2.0 research components..."
+	python scripts/test_research_pipeline.py --test all
+
+research.test.quick:
+	@echo "Quick test of research pipeline (no evidence)..."
+	python scripts/run_trust_research.py --dataset liar --split val --limit 10 --skip-evidence --no-delphi
+
+research.test.delphi:
+	@echo "Testing Delphi jury (multi-agent)..."
+	python scripts/run_trust_research.py --dataset liar --split val --limit 10 --skip-evidence
+
+research.run:
+	@echo "Running TRUST 2.0 research pipeline (200 examples)..."
+	python scripts/run_trust_research.py --dataset liar --split val --limit 200 --top-k 10
+
+research.run.full:
+	@echo "Running TRUST 2.0 on FULL validation set..."
+	python scripts/run_trust_research.py --dataset liar --split val --top-k 10
+
+research.eval:
+	python scripts/evaluate_predictions.py --preds outputs/trust_research/liar_predictions.jsonl --output outputs/trust_research/metrics_liar.json
+
+research.pipeline:
+	@echo "Running complete TRUST 2.0 research pipeline..."
+	$(MAKE) research.run
+	@echo ""
+	$(MAKE) research.eval
+
+research.compare:
+	@echo "Comparing baseline TRUST vs TRUST 2.0..."
+	python scripts/compare_research_baseline.py --dataset liar
+
 help:
 	@echo "TRUST Agents - Makefile Commands"
 	@echo "=================================="
 	@echo ""
-	@echo "TRUST AGENTS:"
+	@echo "TRUST AGENTS (Original):"
 	@echo "  make trust.setup    - Setup evidence corpus and index"
 	@echo "  make trust.test     - Quick test (10 examples)"
 	@echo "  make trust.run      - Run TRUST (200 examples)"
 	@echo "  make trust.eval     - Evaluate TRUST predictions"
 	@echo "  make trust.pipeline - Complete pipeline"
+	@echo ""
+	@echo "TRUST AGENTS 2.0 (Research):"
+	@echo "  make research.test        - Test research components"
+	@echo "  make research.test.quick  - Quick test (no Delphi)"
+	@echo "  make research.test.delphi - Test with Delphi jury"
+	@echo "  make research.run         - Run research pipeline (200)"
+	@echo "  make research.run.full    - Run on full validation set"
+	@echo "  make research.eval        - Evaluate research predictions"
+	@echo "  make research.pipeline    - Complete research pipeline"
+	@echo "  make research.compare     - Compare baseline vs research"
+	@echo ""
+	@echo "Other:"
 	@echo "  make compare.all    - Compare all methods"
 	@echo "  make help           - Show this help"
