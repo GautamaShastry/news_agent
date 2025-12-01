@@ -71,8 +71,8 @@ trust.pipeline:
 	$(MAKE) trust.eval
 
 compare.all:
-	@echo "Comparing all methods..."
-	python scripts/compare_all_metrics.py --dataset liar --out results/all_methods_liar.json
+	@echo "Comparing all methods (baselines + pipelines)..."
+	python scripts/compare_all_results.py --output results/comparison_all.json
 
 clean.outputs:
 	rm -rf outputs/

@@ -1,0 +1,84 @@
+{
+  "timestamp": "2025-12-01T09:31:35.370664",
+  "results": {
+    "BERT (fine-tuned)": {
+      "accuracy": 0.6515978176149649,
+      "f1_macro": 0.7259350091968118,
+      "type": "fine-tuned",
+      "source": "results/baselines_liar.json"
+    },
+    "RoBERTa (fine-tuned)": {
+      "accuracy": 0.6414653156664069,
+      "f1_macro": 0.7255369928400954,
+      "type": "fine-tuned",
+      "source": "results/baselines_liar.json"
+    },
+    "LLM Baseline (GPT-4.1-nano)": {
+      "accuracy": 0.58,
+      "f1_macro": 0.5280898876404494,
+      "type": "llm-baseline",
+      "source": "results/baselines_liar.json"
+    },
+    "Original Pipeline (uncertain\u2192false)": {
+      "accuracy": 0.485,
+      "f1_macro": 0.4283,
+      "total": 200,
+      "uncertain_count": 141,
+      "uncertain_rate": 0.705,
+      "pred_distribution": {
+        "true": 37,
+        "uncertain": 141,
+        "false": 22
+      },
+      "type": "agent-pipeline",
+      "source": "outputs/trust_agents/liar_predictions.jsonl"
+    },
+    "Original Pipeline (uncertain\u2192true)": {
+      "accuracy": 0.52,
+      "f1_macro": 0.4339,
+      "total": 200,
+      "uncertain_count": 141,
+      "uncertain_rate": 0.705,
+      "pred_distribution": {
+        "true": 37,
+        "uncertain": 141,
+        "false": 22
+      },
+      "type": "agent-pipeline",
+      "source": "outputs/trust_agents/liar_predictions.jsonl"
+    },
+    "Research Pipeline (uncertain\u2192false)": {
+      "accuracy": 0.495,
+      "f1_macro": 0.3632,
+      "total": 200,
+      "uncertain_count": 165,
+      "uncertain_rate": 0.825,
+      "pred_distribution": {
+        "uncertain": 165,
+        "false": 26,
+        "true": 9
+      },
+      "type": "research-pipeline",
+      "source": "outputs/trust_research/liar_predictions.jsonl"
+    },
+    "Research Pipeline (uncertain\u2192true)": {
+      "accuracy": 0.52,
+      "f1_macro": 0.4439,
+      "total": 200,
+      "uncertain_count": 165,
+      "uncertain_rate": 0.825,
+      "pred_distribution": {
+        "uncertain": 165,
+        "false": 26,
+        "true": 9
+      },
+      "type": "research-pipeline",
+      "source": "outputs/trust_research/liar_predictions.jsonl"
+    }
+  },
+  "summary": {
+    "total_methods": 7,
+    "best_method": "BERT (fine-tuned)",
+    "best_accuracy": 0.6515978176149649
+  }
+}
